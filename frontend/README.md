@@ -40,11 +40,11 @@ A simple vanilla JavaScript frontend application for managing users. This applic
     Using Python:
     ```bash
     cd frontend
-    python3 -m http.server 8080
+    python3 -m http.server 80
     ```
-    Then navigate to `http://localhost:8080` in your browser.
+    Then navigate to `http://localhost:80` in your browser.
 
-    *Note: The backend is configured to accept requests from `http://localhost:8080`. If you use a different port, update the CORS configuration in the backend.*
+    *Note: The backend is configured to accept requests from `http://localhost:80`. If you use a different port, update the CORS configuration in the backend.*
 
 4.  **Login**:
     Use the admin credentials you created with the seed script:
