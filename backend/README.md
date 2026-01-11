@@ -49,7 +49,22 @@ A lightweight RESTful API built with Node.js and Express to manage user data. Th
 
 ## Usage
 
-### Starting the Server
+### Running with Docker
+
+Build and run the backend container:
+
+```bash
+docker build -t backend .
+docker run -p 3000:3000 --env-file .env backend
+```
+
+Or use Docker Compose from the project root:
+
+```bash
+docker-compose up --build backend
+```
+
+### Starting the Server Locally
 
 To start the server in production mode:
 ```bash
@@ -198,6 +213,7 @@ Returns the server health status.
 backend/
 ├── server.js              # Main entry point
 ├── package.json           # Project dependencies and scripts
+├── Dockerfile             # Container image definition
 ├── .env.example           # Environment variables template
 ├── data/
 │   ├── users.json         # User data (managed via API)

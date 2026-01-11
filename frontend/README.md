@@ -20,11 +20,31 @@ A simple vanilla JavaScript frontend application for managing users. This applic
 
 ## Prerequisites
 
+- Docker (for containerized deployment) or a static file server.
 - A backend API running at `http://localhost:3000` (see `../backend/README.md` for setup instructions).
 - An admin user created in the backend (using `npm run seed:admin`).
 - A modern web browser.
 
 ## Getting Started
+
+### Running with Docker
+
+The easiest way to run the frontend is with Docker Compose from the project root:
+
+```bash
+docker-compose up --build
+```
+
+Or build and run the frontend container directly:
+
+```bash
+docker build -t frontend .
+docker run -p 80:80 frontend
+```
+
+The frontend uses Nginx to serve static files and will be available at `http://localhost:80`.
+
+### Running Locally
 
 1.  **Start the Backend**: Ensure the backend server is running and configured with JWT secrets.
 
@@ -53,6 +73,7 @@ A simple vanilla JavaScript frontend application for managing users. This applic
 
 ## Project Structure
 
+- `Dockerfile`: Container image definition using Nginx.
 - `index.html`: Login page (Entry point).
 - `users.html`: Dashboard showing the list of users.
 - `add-user.html`: Form to create a new user.

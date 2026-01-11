@@ -21,14 +21,32 @@ The application follows a standard client-server architecture:
 
 ## Getting Started
 
-To explore or deploy this project, please refer to the specific documentation in each directory:
+### Quick Start with Docker
+
+The easiest way to run the full stack is with Docker Compose:
+
+```bash
+# Create backend environment file
+cp backend/.env.example backend/.env
+# Edit backend/.env with your JWT secrets
+
+# Start both frontend and backend
+docker-compose up --build
+```
+
+The frontend will be available at `http://localhost:80` and the backend API at `http://localhost:3000`.
+
+### Component Documentation
+
+For more details, refer to the specific documentation in each directory:
 
 1. **Development**: See the `backend` and `frontend` READMEs for local setup and development instructions.
 2. **Deployment**: See the `ops/terraform` README for details on provisioning the AWS infrastructure and deploying the application to EKS.
 
 ## Prerequisites
 
-- Node.js (for backend development)
+- Docker and Docker Compose (for containerized deployment)
+- Node.js (for local backend development)
 - Terraform (for infrastructure provisioning)
 - AWS CLI configured with appropriate permissions
 - kubectl (for cluster management)
