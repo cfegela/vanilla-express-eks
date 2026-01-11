@@ -8,15 +8,15 @@ A full-stack application featuring a vanilla JavaScript frontend and an Express.
 
 This repository is organized into three main components:
 
-- **[backend/](./backend/)**: Node.js Express server providing a RESTful API for user management, using a local JSON file for data persistence.
-- **[frontend/](./frontend/)**: A lightweight, vanilla HTML/CSS/JavaScript interface for interacting with the user management system.
+- **[backend/](./backend/)**: Node.js Express server providing a RESTful API for user management with JWT authentication, using local JSON files for data persistence.
+- **[frontend/](./frontend/)**: A lightweight, vanilla HTML/CSS/JavaScript interface for interacting with the user management system, with full authentication support.
 - **[ops/terraform/](./ops/terraform/)**: Infrastructure as Code (IaC) to provision the necessary AWS resources, including an EKS cluster, ALB ingress controller, and networking components.
 
 ## Architecture Overview
 
 The application follows a standard client-server architecture:
-1. The **Frontend** communicates with the **Backend** API via standard HTTP requests.
-2. The **Backend** processes requests and manages user data stored in `backend/data/users.json`.
+1. The **Frontend** communicates with the **Backend** API via standard HTTP requests, using JWT tokens for authentication.
+2. The **Backend** processes requests, authenticates users with JWT access/refresh tokens, and manages user data stored in `backend/data/users.json`. Authentication credentials are stored separately in `backend/data/auth-users.json`.
 3. The **Infrastructure** layer sets up a production-ready Kubernetes environment on AWS, handling load balancing (ALB), DNS/SSL (ACM), and cluster management (EKS).
 
 ## Getting Started

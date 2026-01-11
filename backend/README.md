@@ -1,12 +1,14 @@
 # User Management Backend
 
-A lightweight RESTful API built with Node.js and Express to manage user data. This service provides basic CRUD (Create, Read, Update, Delete) operations and persists data to a local JSON file.
+A lightweight RESTful API built with Node.js and Express to manage user data. This service provides CRUD operations with JWT-based authentication and role-based access control, persisting data to local JSON files.
 
 ## Features
 
+- **JWT Authentication**: Secure access and refresh token system with automatic token rotation.
+- **Role-Based Access Control**: Admin-only endpoints for create, update, and delete operations.
 - **RESTful API**: Standard HTTP methods for managing users.
-- **Data Persistence**: Uses a local JSON file (`data/users.json`) to store user records.
-- **CORS Support**: Configured to allow requests from any origin, making it easy to integrate with frontends.
+- **Data Persistence**: Uses local JSON files (`data/users.json` and `data/auth-users.json`) to store data.
+- **CORS Support**: Configured to allow requests from the frontend origin.
 - **Zero Database Setup**: No external database required; just run and go.
 
 ## Prerequisites
@@ -24,6 +26,25 @@ A lightweight RESTful API built with Node.js and Express to manage user data. Th
 2.  Install dependencies:
     ```bash
     npm install
+    ```
+
+3.  Create a `.env` file from the example:
+    ```bash
+    cp .env.example .env
+    ```
+
+4.  Update the `.env` file with secure secrets:
+    ```
+    JWT_ACCESS_SECRET=your-secure-random-string-at-least-32-chars
+    JWT_REFRESH_SECRET=your-different-secure-random-string
+    JWT_ACCESS_EXPIRY=15m
+    JWT_REFRESH_EXPIRY=7d
+    PORT=3000
+    ```
+
+5.  Create an admin user:
+    ```bash
+    npm run seed:admin admin YourSecurePassword123
     ```
 
 ## Usage
@@ -44,25 +65,84 @@ The server will start on port **3000** by default (e.g., `http://localhost:3000`
 
 ## API Endpoints
 
-### 1. Get All Users
+### Authentication Endpoints
+
+#### POST /auth/login
+Authenticates a user and returns tokens.
+
+- **Body** (JSON):
+    ```json
+    {
+      "username": "admin",
+      "password": "YourSecurePassword123"
+    }
+    ```
+- **Response**:
+    ```json
+    {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refreshToken": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "user": {
+        "id": "uuid",
+        "username": "admin",
+        "email": "admin@example.com",
+        "role": "admin"
+      }
+    }
+    ```
+
+#### POST /auth/refresh
+Exchanges a refresh token for new access and refresh tokens.
+
+- **Body** (JSON):
+    ```json
+    {
+      "refreshToken": "your-refresh-token"
+    }
+    ```
+- **Response**: New `accessToken` and `refreshToken`.
+
+#### POST /auth/logout
+Invalidates the provided refresh token.
+
+- **Body** (JSON):
+    ```json
+    {
+      "refreshToken": "your-refresh-token"
+    }
+    ```
+
+#### POST /auth/logout-all
+Invalidates all refresh tokens for the authenticated user. Requires authentication.
+
+- **Headers**: `Authorization: Bearer <access-token>`
+
+#### GET /auth/me
+Returns the authenticated user's profile. Requires authentication.
+
+- **Headers**: `Authorization: Bearer <access-token>`
+- **Response**: User object with `id`, `username`, `email`, `role`, and `lastLogin`.
+
+### User Endpoints
+
+All user endpoints require authentication via Bearer token in the Authorization header.
+
+#### GET /users
 Retrieves a list of all registered users.
 
-- **URL**: `/users`
-- **Method**: `GET`
+- **Headers**: `Authorization: Bearer <access-token>`
 - **Response**: Array of user objects.
 
-### 2. Get Single User
+#### GET /users/:id
 Retrieves details of a specific user by ID.
 
-- **URL**: `/users/:id`
-- **Method**: `GET`
+- **Headers**: `Authorization: Bearer <access-token>`
 - **Response**: User object or error if not found.
 
-### 3. Create User
+#### POST /users (Admin only)
 Adds a new user to the system.
 
-- **URL**: `/users`
-- **Method**: `POST`
+- **Headers**: `Authorization: Bearer <access-token>`
 - **Body** (JSON):
     ```json
     {
@@ -75,11 +155,10 @@ Adds a new user to the system.
 - **Required Fields**: `name`, `email`
 - **Response**: The created user object with an assigned `id`.
 
-### 4. Update User
+#### PUT /users/:id (Admin only)
 Updates an existing user's information.
 
-- **URL**: `/users/:id`
-- **Method**: `PUT`
+- **Headers**: `Authorization: Bearer <access-token>`
 - **Body** (JSON): Partial or full user object.
     ```json
     {
@@ -88,21 +167,57 @@ Updates an existing user's information.
     ```
 - **Response**: The updated user object.
 
-### 5. Delete User
+#### DELETE /users/:id (Admin only)
 Removes a user from the system.
 
-- **URL**: `/users/:id`
-- **Method**: `DELETE`
+- **Headers**: `Authorization: Bearer <access-token>`
 - **Response**: The deleted user object.
+
+### Health Check
+
+#### GET /health
+Returns the server health status.
+
+- **Response**: `{ "status": "ok", "timestamp": "..." }`
 
 ## Configuration
 
-- **Port**: The server listens on port `3000` by default. You can override this by setting the `PORT` environment variable.
-- **Data Storage**: Data is stored in `data/users.json`. Ensure this directory and file are writable by the application.
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `PORT` | Server port | `3000` |
+| `JWT_ACCESS_SECRET` | Secret for signing access tokens | (required) |
+| `JWT_REFRESH_SECRET` | Secret for signing refresh tokens | (required) |
+| `JWT_ACCESS_EXPIRY` | Access token expiry | `15m` |
+| `JWT_REFRESH_EXPIRY` | Refresh token expiry | `7d` |
 
 ## Project Structure
 
-- `server.js`: Main entry point and application logic.
-- `package.json`: Project dependencies and scripts.
-- `data/`: Directory containing the data store.
-    - `users.json`: JSON file acting as the database.
+```
+backend/
+├── server.js              # Main entry point
+├── package.json           # Project dependencies and scripts
+├── .env.example           # Environment variables template
+├── data/
+│   ├── users.json         # User data (managed via API)
+│   └── auth-users.json    # Authentication credentials
+├── middleware/
+│   └── auth.js            # JWT authentication middleware
+├── routes/
+│   ├── auth.js            # Authentication routes
+│   └── users.js           # User CRUD routes
+├── scripts/
+│   └── seed-admin.js      # Admin user creation script
+└── utils/
+    ├── auth-store.js      # Auth data persistence utilities
+    └── token-utils.js     # JWT token utilities
+```
+
+## Scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `start` | `npm start` | Start the server |
+| `dev` | `npm run dev` | Start with watch mode |
+| `seed:admin` | `npm run seed:admin <username> <password>` | Create an admin user |
