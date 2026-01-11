@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "city": "New York",
+    "state": "NY"
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "city": "Los Angeles",
+    "state": "CA"
+  },
+  {
+    "id": 3,
+    "name": "Chris Fegela",
+    "email": "cfegela@gmail.com",
+    "city": "Austin",
+    "state": "TX"
+  },
+  {
+    "id": 4,
+    "name": "Kimberly Corwin",
+    "email": "kimbo@gmail.com",
+    "city": "Bonita Springs",
+    "state": "FL"
+  }
+]

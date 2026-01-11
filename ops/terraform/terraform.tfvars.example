@@ -1,0 +1,17 @@
+# AWS Region
+aws_region = "us-east-1"
+
+# EKS Cluster Configuration
+cluster_name       = "my-eks-fargate-cluster"
+kubernetes_version = "1.28"
+
+# Network Configuration
+vpc_cidr = "10.0.0.0/16"
+
+# SSL Certificate Configuration
+domain_name               = "app.example.com"
+subject_alternative_names = ["www.app.example.com"]
+
+# DNS Configuration (set to true if using Route53)
+create_dns_records = false
+hosted_zone_name   = "example.com"
