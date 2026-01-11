@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "id": "4a4da35f-1376-432f-8d48-e2c439873eb0",
+      "username": "admin",
+      "passwordHash": "$2b$12$h.zQVSSr3LohByEldWboaun641BsP4JS3G5xKr64s0O6rcDX7rNPS",
+      "email": "admin@example.com",
+      "role": "admin",
+      "createdAt": "2026-01-11T14:57:42.624Z",
+      "updatedAt": "2026-01-11T14:57:42.625Z",
+      "lastLogin": "2026-01-11T16:26:47.888Z"
+    }
+  ],
+  "refreshTokens": [
+    {
+      "token": "db2e5e8ac57f5565b0053b0157b973ef7824b3354f75543cf9a513295c902e3d",
+      "userId": "4a4da35f-1376-432f-8d48-e2c439873eb0",
+      "expiresAt": "2026-01-18T15:01:46.897Z",
+      "createdAt": "2026-01-11T15:01:46.900Z",
+      "deviceInfo": "curl/8.7.1"
+    },
+    {
+      "token": "900f632536e4a2d2cf5a9a0ccb0afd1dff18f0e65b48cc688ada5ffee8679662",
+      "userId": "4a4da35f-1376-432f-8d48-e2c439873eb0",
+      "expiresAt": "2026-01-18T15:02:21.120Z",
+      "createdAt": "2026-01-11T15:02:21.120Z",
+      "deviceInfo": "curl/8.7.1"
+    },
+    {
+      "token": "b94e14dc7f822e548d8afbc9c3db5c26d38012e0f85e2513a6e3847a4958e2f1",
+      "userId": "4a4da35f-1376-432f-8d48-e2c439873eb0",
+      "expiresAt": "2026-01-18T16:19:36.996Z",
+      "createdAt": "2026-01-11T16:19:36.996Z",
+      "deviceInfo": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+    }
+  ]
+}
