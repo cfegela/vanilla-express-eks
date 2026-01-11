@@ -29,7 +29,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border: 1px solid #000;
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 .panel.login-panel {
@@ -189,9 +189,20 @@ tr:hover {
     background: #f9f9f9;
 }
 
-td.actions {
-    display: flex;
+td.actions .action-buttons {
+    display: inline-flex;
+    flex-direction: row;
     gap: 8px;
+    align-items: center;
+}
+
+td.actions .action-buttons .btn {
+    width: auto;
+    flex-shrink: 0;
+}
+
+tbody tr:last-child td {
+    border-bottom: 1px solid #000;
 }
 
 .loading, .empty {
@@ -210,7 +221,7 @@ td.actions {
         flex-direction: column;
     }
 
-    td.actions {
+    td.actions .action-buttons {
         flex-direction: column;
     }
 }

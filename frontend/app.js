@@ -223,8 +223,10 @@ function renderUsers(users) {
             <td>${escapeHtml(user.city || '')}</td>
             <td>${escapeHtml(user.state || '')}</td>
             <td class="actions">
-                <a href="edit-user.html?id=${user.id}" class="btn btn-small">Edit</a>
-                <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                <div class="action-buttons">
+                    <a href="edit-user.html?id=${user.id}" class="btn btn-small">Edit</a>
+                    <button class="btn btn-small btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+                </div>
             </td>
         `;
         usersBody.appendChild(row);

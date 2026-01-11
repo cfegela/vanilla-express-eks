@@ -1,14 +1,14 @@
 {
   "users": [
     {
-      "id": "4a4da35f-1376-432f-8d48-e2c439873eb0",
+      "id": "eaaffe2e-6b23-46f6-b977-1a9383b00898",
       "username": "admin",
-      "passwordHash": "$2b$12$h.zQVSSr3LohByEldWboaun641BsP4JS3G5xKr64s0O6rcDX7rNPS",
+      "passwordHash": "$2b$12$M/xAwKev5Ed/J1.xlEoReu49umDfauFnlTAZZYpQuiUXNDKfZr7BO",
       "email": "admin@example.com",
       "role": "admin",
-      "createdAt": "2026-01-11T14:57:42.624Z",
-      "updatedAt": "2026-01-11T14:57:42.625Z",
-      "lastLogin": "2026-01-11T16:26:47.888Z"
+      "createdAt": "2026-01-11T16:46:46.477Z",
+      "updatedAt": "2026-01-11T16:46:46.478Z",
+      "lastLogin": "2026-01-11T17:04:54.709Z"
     }
   ],
   "refreshTokens": [
@@ -31,6 +31,20 @@
       "userId": "4a4da35f-1376-432f-8d48-e2c439873eb0",
       "expiresAt": "2026-01-18T16:19:36.996Z",
       "createdAt": "2026-01-11T16:19:36.996Z",
+      "deviceInfo": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+    },
+    {
+      "token": "4c3b3cc831a804abcbd79660ae416d0c3131b5c63ecbfd8537c963702b912fa6",
+      "userId": "eaaffe2e-6b23-46f6-b977-1a9383b00898",
+      "expiresAt": "2026-01-18T16:48:55.634Z",
+      "createdAt": "2026-01-11T16:48:55.634Z",
+      "deviceInfo": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+    },
+    {
+      "token": "75275e3a8cf3133f98ddafa6a6787699f97c62780937a67c4a516bb036617088",
+      "userId": "eaaffe2e-6b23-46f6-b977-1a9383b00898",
+      "expiresAt": "2026-01-18T17:04:54.708Z",
+      "createdAt": "2026-01-11T17:04:54.708Z",
       "deviceInfo": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
     }
   ]
