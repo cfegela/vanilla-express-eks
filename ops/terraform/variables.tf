@@ -34,13 +34,31 @@ variable "subject_alternative_names" {
 }
 
 variable "hosted_zone_name" {
-  description = "Route53 hosted zone name for DNS validation"
+  description = "Route53 hosted zone name for DNS validation (used if hosted_zone_id is not provided)"
+  type        = string
+  default     = ""
+}
+
+variable "hosted_zone_id" {
+  description = "Route53 hosted zone ID. If provided, skips zone lookup by name."
   type        = string
   default     = ""
 }
 
 variable "create_dns_records" {
   description = "Whether to create Route53 DNS records for certificate validation"
+  type        = bool
+  default     = false
+}
+
+variable "acm_certificate_arn" {
+  description = "ARN of an existing ACM certificate. If provided, skips certificate creation."
+  type        = string
+  default     = ""
+}
+
+variable "enable_external_dns" {
+  description = "Enable external-dns to automatically manage Route53 DNS records for Ingress resources"
   type        = bool
   default     = false
 }
