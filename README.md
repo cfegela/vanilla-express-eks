@@ -1,4 +1,4 @@
-# Vanilla Express EKS
+# Vanilla + Express + EKS
 
 A full-stack application featuring a vanilla JavaScript frontend and an Express.js backend, designed for deployment on Amazon EKS using Terraform.
 
