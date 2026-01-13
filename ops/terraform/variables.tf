@@ -23,38 +23,23 @@ variable "vpc_cidr" {
 }
 
 variable "domain_name" {
-  description = "Domain name for the SSL certificate and ingress"
+  description = "Domain name for the ingress"
   type        = string
-}
-
-variable "subject_alternative_names" {
-  description = "Subject alternative names for the SSL certificate"
-  type        = list(string)
-  default     = []
 }
 
 variable "hosted_zone_name" {
-  description = "Route53 hosted zone name for DNS validation (used if hosted_zone_id is not provided)"
+  description = "Route53 hosted zone name for external-dns domain filter"
   type        = string
-  default     = ""
 }
 
 variable "hosted_zone_id" {
-  description = "Route53 hosted zone ID. If provided, skips zone lookup by name."
+  description = "Route53 hosted zone ID for external-dns"
   type        = string
-  default     = ""
-}
-
-variable "create_dns_records" {
-  description = "Whether to create Route53 DNS records for certificate validation"
-  type        = bool
-  default     = false
 }
 
 variable "acm_certificate_arn" {
-  description = "ARN of an existing ACM certificate. If provided, skips certificate creation."
+  description = "ARN of the ACM certificate for HTTPS"
   type        = string
-  default     = ""
 }
 
 variable "enable_external_dns" {

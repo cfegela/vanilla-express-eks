@@ -38,11 +38,6 @@ output "certificate_arn" {
   value       = local.certificate_arn
 }
 
-output "certificate_domain_validation_options" {
-  description = "Domain validation options for the certificate (use if create_dns_records is false)"
-  value       = local.use_existing_certificate ? [] : aws_acm_certificate.main[0].domain_validation_options
-}
-
 output "hosted_zone_id" {
   description = "Route53 hosted zone ID used for DNS records"
   value       = local.hosted_zone_id
