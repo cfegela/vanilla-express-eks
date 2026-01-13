@@ -148,6 +148,7 @@ resource "helm_release" "external_dns" {
   depends_on = [
     aws_eks_fargate_profile.external_dns,
     kubernetes_service_account_v1.external_dns,
-    null_resource.coredns_patch
+    null_resource.coredns_patch,
+    helm_release.aws_load_balancer_controller
   ]
 }
