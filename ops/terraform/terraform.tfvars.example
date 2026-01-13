@@ -1,0 +1,9 @@
+aws_region = "REGION"
+cluster_name       = "CLUSTERNAME"
+kubernetes_version = "1.31"
+vpc_cidr = "10.0.0.0/16"
+domain_name         = "R53CNAME" # ex: cfeg.cwf.oddball.io
+acm_certificate_arn = "arn:aws:acm:us-east-1:620743043986:certificate/d5874127-956a-4242-9da2-de18e6f455d5"
+hosted_zone_name = "HOSTEDZONENAME" # ex: cwf.oddball.io 
+hosted_zone_id   = "HOSTEDZONEID"
+enable_external_dns = true # should always be true
