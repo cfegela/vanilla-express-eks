@@ -97,3 +97,34 @@ The API URL is defined in `app.js`:
 const API_URL = 'http://localhost:3000';
 ```
 If your backend is running on a different port or host, update this constant in `app.js`.
+
+## Production Deployment with CloudFront
+
+The frontend is designed for production deployment via AWS CloudFront and S3. The Terraform configuration in `ops/terraform/` automates this deployment.
+
+### CloudFront Deployment Features
+
+- **S3 Origin**: Static files are stored in an S3 bucket with versioning enabled
+- **CloudFront CDN**: Global content delivery with low latency
+- **HTTPS/SSL**: Secure access via custom domain with ACM certificate
+- **Origin Access Control (OAC)**: Modern security configuration preventing direct S3 access
+- **Automatic API URL Injection**: The backend API URL is automatically replaced during deployment
+- **Cache Optimization**:
+  - HTML files: No-cache (always fresh)
+  - JS/CSS files: Long-term cache (1 year) with automatic invalidation on changes
+- **Custom Domain**: Access via your configured domain (e.g., `https://cfeg-ui.cwf.oddball.io`)
+
+### Deployment Process
+
+The deployment is automated via Terraform:
+
+1. Frontend files are synced to S3
+2. API_URL in `app.js` is automatically replaced with the production backend URL
+3. CloudFront cache is invalidated to serve fresh content
+4. Route53 DNS record is created/updated to point to CloudFront
+
+See the [ops/terraform README](../ops/terraform/README.md) for deployment instructions.
+
+### CORS Configuration
+
+When deployed to production, ensure the backend API's CORS configuration allows requests from your CloudFront domain.

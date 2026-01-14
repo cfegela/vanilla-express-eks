@@ -47,3 +47,21 @@ variable "enable_external_dns" {
   type        = bool
   default     = false
 }
+
+variable "enable_cloudfront" {
+  description = "Enable CloudFront distribution for static frontend hosting"
+  type        = bool
+  default     = false
+}
+
+variable "frontend_domain_name" {
+  description = "Domain name for the CloudFront frontend (e.g., cfeg-ui.cwf.oddball.io)"
+  type        = string
+  default     = ""
+}
+
+variable "frontend_api_url" {
+  description = "API URL to inject into frontend app.js (must be HTTPS)"
+  type        = string
+  default     = ""
+}

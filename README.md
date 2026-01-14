@@ -14,10 +14,11 @@ This repository is organized into three main components:
 
 ## Architecture Overview
 
-The application follows a standard client-server architecture:
-1. The **Frontend** communicates with the **Backend** API via standard HTTP requests, using JWT tokens for authentication.
-2. The **Backend** processes requests, authenticates users with JWT access/refresh tokens, and manages user data stored in `backend/data/users.json`. Authentication credentials are stored separately in `backend/data/auth-users.json`.
-3. The **Infrastructure** layer sets up a production-ready Kubernetes environment on AWS, handling load balancing (ALB), DNS/SSL (ACM), and cluster management (EKS).
+The application follows a standard client-server architecture with cloud-native deployment:
+1. The **Frontend** is deployed as a static site via AWS CloudFront and S3, providing global CDN distribution with low latency.
+2. The **Frontend** communicates with the **Backend** API via standard HTTP requests, using JWT tokens for authentication.
+3. The **Backend** is deployed on Amazon EKS with Fargate, processing requests, authenticating users with JWT access/refresh tokens, and managing user data stored in `backend/data/users.json`. Authentication credentials are stored separately in `backend/data/auth-users.json`.
+4. The **Infrastructure** layer sets up a production-ready Kubernetes environment on AWS, handling load balancing (ALB), DNS/SSL (ACM), cluster management (EKS), and CloudFront CDN distribution for the frontend.
 
 ## Getting Started
 
@@ -50,3 +51,21 @@ For more details, refer to the specific documentation in each directory:
 - Terraform (for infrastructure provisioning)
 - AWS CLI configured with appropriate permissions
 - kubectl (for cluster management)
+
+## Production Deployment
+
+The infrastructure supports production deployment on AWS with the following features:
+
+### CloudFront Frontend Distribution
+- Static frontend assets are deployed to S3 and distributed globally via CloudFront
+- HTTPS enabled with custom domain support via ACM certificates
+- Automatic cache invalidation on deployments
+- API URL is automatically configured during deployment
+
+### EKS Backend Deployment
+- Backend API runs on Amazon EKS with Fargate (serverless containers)
+- Application Load Balancer for ingress traffic
+- External DNS for automatic Route53 DNS record management
+- SSL/TLS termination at the load balancer
+
+See the [ops/terraform README](./ops/terraform/README.md) for detailed deployment instructions.
