@@ -13,8 +13,11 @@ The infrastructure includes:
   - `default`: For application workloads in the default namespace.
   - `kube-system`: For core Kubernetes components.
   - `aws-load-balancer-controller`: Specifically for the ALB controller.
+  - `external-dns`: For the External DNS controller when enabled.
 - **AWS Load Balancer Controller**: Installed via Helm to manage Application Load Balancers (ALB) for Ingress.
 - **External DNS** (optional): Automatically manages Route53 DNS records for Ingress resources.
+- **EFS Persistent Storage** (optional): Shared persistent storage for backend API using AWS EFS with direct NFS mounts.
+- **Backend API** (optional): Express.js API with JWT authentication, deployed to EKS with persistent storage.
 - **Nginx Demo**: A sample "Hello World" deployment to verify the stack.
 
 ### Frontend Infrastructure (CloudFront)
@@ -69,6 +72,12 @@ When enabled, the following resources are **created** by this configuration:
 | `enable_cloudfront` | `false` | Enable CloudFront distribution for frontend |
 | `frontend_domain_name` | `""` | Domain for CloudFront frontend (e.g., `ui.example.com`) |
 | `frontend_api_url` | `""` | Backend API URL to inject into frontend (must be HTTPS) |
+| `enable_backend` | `false` | Enable backend API deployment with EFS storage |
+| `backend_domain_name` | `""` | Domain for backend API (e.g., `api.example.com`) |
+| `backend_jwt_access_secret` | `""` | JWT access token secret (base64, 32+ bytes recommended) |
+| `backend_jwt_refresh_secret` | `""` | JWT refresh token secret (base64, 32+ bytes recommended) |
+| `backend_admin_username` | `admin` | Initial admin username for backend API |
+| `backend_admin_password` | `""` | Initial admin password (leave empty to skip seed) |
 
 ## Getting Started
 
@@ -93,7 +102,15 @@ When enabled, the following resources are **created** by this configuration:
    # CloudFront Frontend Configuration (Optional)
    enable_cloudfront    = true
    frontend_domain_name = "ui.example.com"
-   frontend_api_url     = "https://app.example.com"
+   frontend_api_url     = "https://api.example.com"
+
+   # Backend API Configuration (Optional)
+   enable_backend             = true
+   backend_domain_name        = "api.example.com"
+   backend_jwt_access_secret  = "your-base64-encoded-secret-here"
+   backend_jwt_refresh_secret = "your-base64-encoded-secret-here"
+   backend_admin_username     = "admin"
+   backend_admin_password     = "your-secure-password-here"
    ```
 
 3. **Plan and Apply**:
@@ -127,6 +144,11 @@ After successful deployment, the following outputs are available:
 - `cloudfront_url` - Custom domain URL (e.g., https://ui.example.com)
 - `frontend_s3_bucket` - S3 bucket name for frontend files
 
+### Backend API Outputs (when enabled)
+- `backend_ecr_repository_url` - ECR repository URL for backend container images
+- `backend_api_url` - Backend API URL (e.g., https://api.example.com)
+- `efs_file_system_id` - EFS filesystem ID for persistent storage
+
 ## Key Components
 
 ### AWS Load Balancer Controller
@@ -156,6 +178,32 @@ When `enable_cloudfront = true`, the configuration provisions:
 - Deployment takes 5-15 minutes due to CloudFront distribution creation
 - Frontend files are automatically redeployed when they change
 
+### Backend API with EFS Persistent Storage
+When `enable_backend = true`, the configuration provisions:
+
+- **EFS Filesystem**: Encrypted AWS EFS for shared persistent storage
+  - Lifecycle policy: Transition to Infrequent Access after 30 days
+  - Mount targets in all private subnets for high availability
+  - Security group allowing NFS (port 2049) from VPC
+- **ECR Repository**: Named `${cluster_name}-backend` for Docker images
+  - Image scanning on push enabled
+  - Lifecycle policy: Keep last 10 images
+- **Backend Deployment**: Express.js API with 2 replicas
+  - JWT-based authentication
+  - Direct EFS NFS mount at `/app/data` (Fargate-compatible)
+  - Health checks on `/health` endpoint
+  - Auto-scaling ready with shared storage
+- **Kubernetes Service**: ClusterIP service exposing port 80
+- **Ingress**: ALB-based ingress with HTTPS/SSL redirect
+- **Admin User Seeding**: Automatic initialization of admin user on first deploy
+
+**Important Notes:**
+- **EFS CSI Driver is NOT used**: Fargate doesn't support the EFS CSI driver because it requires privileged containers. Instead, we use direct NFS volume mounts in the pod spec.
+- **No PersistentVolume/PersistentVolumeClaim**: Direct NFS mounts eliminate the need for PV/PVC resources.
+- **Shared Storage**: All backend replicas share the same EFS filesystem, ensuring data consistency.
+- **Data Persistence**: Data survives pod restarts, scaling events, and deployments.
+- **JWT Secrets**: Must be base64-encoded strings (32+ bytes recommended). Generate with: `openssl rand -base64 32`
+
 ### CoreDNS Patch
 Since this is a Fargate-only cluster, a `null_resource` is used to patch the `coredns` deployment to remove the default EC2 compute type annotation, allowing it to run on Fargate.
 
@@ -183,7 +231,7 @@ The following resources will **persist** after running `terraform destroy`:
 | **Target Groups** | AWS LB Controller | Created dynamically by the ALB Controller |
 | **Route53 DNS Records** | external-dns | Created dynamically based on Ingress annotations (if enabled) |
 
-**Note**: CloudFront-related resources (S3 bucket, CloudFront distribution, Route53 A record for frontend) are managed by Terraform and will be destroyed when `enable_cloudfront = true`. The S3 bucket has `force_destroy = true`, so all objects will be deleted automatically.
+**Note**: CloudFront-related resources (S3 bucket, CloudFront distribution, Route53 A record for frontend) and EFS-related resources (EFS filesystem, mount targets, security groups) are managed by Terraform and will be destroyed. The S3 bucket has `force_destroy = true`, so all objects will be deleted automatically. EFS data will be permanently deleted on destroy.
 
 ### Manual Cleanup Steps
 

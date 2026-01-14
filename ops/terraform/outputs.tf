@@ -67,3 +67,18 @@ output "frontend_s3_bucket" {
   description = "S3 bucket name for frontend static files"
   value       = var.enable_cloudfront ? aws_s3_bucket.frontend[0].id : null
 }
+
+output "backend_ecr_repository_url" {
+  description = "ECR repository URL for backend images"
+  value       = var.enable_backend ? aws_ecr_repository.backend[0].repository_url : null
+}
+
+output "backend_api_url" {
+  description = "Backend API URL"
+  value       = var.enable_backend ? "https://${var.backend_domain_name}" : null
+}
+
+output "efs_file_system_id" {
+  description = "EFS filesystem ID for backend storage"
+  value       = var.enable_backend ? aws_efs_file_system.backend[0].id : null
+}

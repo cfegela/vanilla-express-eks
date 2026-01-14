@@ -1,15 +1,16 @@
 # User Management Backend
 
-A lightweight RESTful API built with Node.js and Express to manage user data. This service provides CRUD operations with JWT-based authentication and role-based access control, persisting data to local JSON files.
+A lightweight RESTful API built with Node.js and Express to manage user data. This service provides CRUD operations with JWT-based authentication and role-based access control, persisting data to JSON files (local for development, AWS EFS for production).
 
 ## Features
 
 - **JWT Authentication**: Secure access and refresh token system with automatic token rotation.
 - **Role-Based Access Control**: Admin-only endpoints for create, update, and delete operations.
 - **RESTful API**: Standard HTTP methods for managing users.
-- **Data Persistence**: Uses local JSON files (`data/users.json` and `data/auth-users.json`) to store data.
+- **Data Persistence**: Uses JSON files (`data/users.json` and `data/auth-users.json`) stored locally for development or on AWS EFS for production deployments.
 - **CORS Support**: Configured to allow requests from the frontend origin.
 - **Zero Database Setup**: No external database required; just run and go.
+- **Production Storage**: When deployed to EKS, data is stored on AWS EFS with shared access across all replicas.
 
 ## Prerequisites
 
@@ -237,3 +238,21 @@ backend/
 | `start` | `npm start` | Start the server |
 | `dev` | `npm run dev` | Start with watch mode |
 | `seed:admin` | `npm run seed:admin <username> <password>` | Create an admin user |
+
+## Production Deployment
+
+When deployed to AWS EKS via Terraform, the backend uses:
+
+- **AWS EFS (Elastic File System)**: Shared persistent storage for data files
+- **Direct NFS Mount**: EFS is mounted at `/app/data` using direct NFS (Fargate-compatible)
+- **Multi-Replica Support**: All pods share the same EFS volume, ensuring data consistency
+- **Automatic Admin Seeding**: Admin user is created automatically on first deployment
+
+The Terraform configuration handles:
+- Building and pushing Docker images to ECR
+- Creating encrypted EFS filesystem with mount targets in all availability zones
+- Deploying Kubernetes resources (Deployment, Service, Ingress)
+- Configuring JWT secrets via Kubernetes Secrets
+- Setting up ALB ingress with HTTPS/SSL
+
+See the [ops/terraform README](../ops/terraform/README.md) for deployment instructions.
