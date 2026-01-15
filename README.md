@@ -2,8 +2,6 @@
 
 A full-stack application featuring a vanilla JavaScript frontend and an Express.js backend, designed for deployment on Amazon EKS using Terraform.
 
-**Every line of code in this repository, as well as all of the documentation, was written by Claude and Gemini on the CLI. Trust but verify.**
-
 ## Project Structure
 
 This repository is organized into three main components:
